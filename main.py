@@ -134,7 +134,7 @@ def get_rolling_returns(df, years, ath_percentage=100):
 
     return out
 
-def run_with_samples(label, system_cls, start_amount, samples):
+def run_with_samples(system_cls, start_amount, samples):
     balances = {}
     for yearly_returns in samples:
         system = system_cls(start_amount)
@@ -145,7 +145,7 @@ def run_with_samples(label, system_cls, start_amount, samples):
 
     return balances
 
-def run_with_samples_with_switch(label, system_cls_first, system_cls_second, start_amount, samples):
+def run_with_samples_with_switch(system_cls_first, system_cls_second, start_amount, samples):
     balances = {}
 
     for yearly_returns in samples:
@@ -211,11 +211,11 @@ def main(mode, market_data_file, max_years, ath_percentage):
         samples = get_rolling_returns(df, max_year, ath_percentage)
 
         balances = {}
-        balances['Market'] = run_with_samples("Market", Market, START_BALANCE, samples)
-        balances['Box 3 26 > Box 3 28'] = run_with_samples_with_switch("", Box3_2026, Box3_2028, START_BALANCE, samples)
-        balances['Savings Acc > Box 2'] = run_with_samples_with_switch("Box 3 2026", FixedInterest, lambda s: Box2(s, s, kostprijs_waarderen=True), START_BALANCE, samples)
-        balances['Box 3 26 > Box 2'] = run_with_samples_with_switch("Box 3 2026", Box3_2026, lambda s: Box2(s, s, kostprijs_waarderen=True), START_BALANCE, samples)
-        balances['Box 2 Kostprijs'] = run_with_samples("Box 2 Kostprijs", lambda s: Box2(s, s, kostprijs_waarderen=True), START_BALANCE, samples)
+        balances['Market'] = run_with_samples(Market, START_BALANCE, samples)
+        balances['Box 3 26 > Box 3 28'] = run_with_samples_with_switch(Box3_2026, Box3_2028, START_BALANCE, samples)
+        balances['Savings Acc > Box 2'] = run_with_samples_with_switch(FixedInterest, lambda s: Box2(s, s, kostprijs_waarderen=True), START_BALANCE, samples)
+        balances['Box 3 26 > Box 2'] = run_with_samples_with_switch(Box3_2026, lambda s: Box2(s, s, kostprijs_waarderen=True), START_BALANCE, samples)
+        balances['Box 2 Kostprijs'] = run_with_samples(lambda s: Box2(s, s, kostprijs_waarderen=True), START_BALANCE, samples)
 
 
         for year in SPANS:
@@ -246,11 +246,11 @@ def main(mode, market_data_file, max_years, ath_percentage):
         samples = get_rolling_returns(df, max_year, ath_percentage)
 
         balances = {}
-        balances['Market'] = run_with_samples("Market", Market, START_BALANCE, samples)
-        balances['Box 3 2026'] = run_with_samples("Box 3 2026", Box3_2026, START_BALANCE, samples)
-        balances['Box 3 2028'] = run_with_samples("Box 3 2028", Box3_2028, START_BALANCE, samples)
-        balances['Box 2 VPB'] = run_with_samples("Box 2 VPB", lambda s: Box2(s, s, kostprijs_waarderen=False), START_BALANCE, samples)
-        balances['Box 2 Kostprijs'] = run_with_samples("Box 2 VPB", lambda s: Box2(s, s, kostprijs_waarderen=True), START_BALANCE, samples)
+        balances['Market'] = run_with_samples(Market, START_BALANCE, samples)
+        balances['Box 3 2026'] = run_with_samples(Box3_2026, START_BALANCE, samples)
+        balances['Box 3 2028'] = run_with_samples(Box3_2028, START_BALANCE, samples)
+        balances['Box 2 VPB'] = run_with_samples(lambda s: Box2(s, s, kostprijs_waarderen=False), START_BALANCE, samples)
+        balances['Box 2 Kostprijs'] = run_with_samples(lambda s: Box2(s, s, kostprijs_waarderen=True), START_BALANCE, samples)
 
 
         for year in SPANS:

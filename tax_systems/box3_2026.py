@@ -3,7 +3,7 @@ from .tax_system import TaxSystem
 # Tarieven 2026
 FORFAITAIR_RENDEMENT = 0.06
 BELASTING_TARIEF = 0.36
-BELASTING_VRIJE_VOET = 59.357
+BELASTING_VRIJE_VOET = 59_357
 
 class Box3_2026(TaxSystem):
 
@@ -19,7 +19,7 @@ class Box3_2026(TaxSystem):
         profit_fictief = taxable * FORFAITAIR_RENDEMENT
 
         # Tegenbewijsregeling
-        profit_werkelijk = taxable * interest if interest > 0 else 0
+        profit_werkelijk = max(0, profit)
 
         # Kies laagste rendement
         taxable_profit = min(profit_fictief, profit_werkelijk)
